@@ -4,7 +4,7 @@ import tkinter as tk
 
 ###----------------GETTING CURRENCY RATES DATA FROM THE FIXER API--------- https://fixer.io/
 url = 'http://data.fixer.io/api/'
-ACCESS_KEY = '?access_key=acde643bc15d7ce29bb0e1ec699715e2'
+ACCESS_KEY = '*****************************************' # <---- PASTE HERE YOUR ACCESS KEY
 count_of_latest_calculations = 0 # this variable is used to determine when to update the latest_rates value
 
 def request(url, TYPE='latest'):
