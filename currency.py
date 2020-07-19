@@ -59,7 +59,7 @@ def return_currency():
         calculated_amount_label.config(text='Pass a valid amount')
     except KeyError:
         calculated_amount_label.config(text='Pass a valid currency')
-####
+####----list of available currencies-----------------------------------------------------####
 choices = ['AED', 'AFN', 'ALL', 'AMD', 'ANG', 'AOA', 'ARS', 'AUD', 'AWG', 'AZN', 'BAM', 
 'BBD', 'BDT', 'BGN', 'BHD', 'BIF', 'BMD', 'BND', 'BOB', 'BRL', 'BSD', 'BTC', 'BTN', 'BWP', 
 'BYN', 'BYR', 'BZD', 'CAD', 'CDF', 'CHF', 'CLF', 'CLP', 'CNY', 'COP', 'CRC', 'CUC', 'CUP', 
