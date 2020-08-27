@@ -40,7 +40,7 @@ def return_currency():
     if len(date_entry.get())==0:
         global count_of_latest_calculations
         count_of_latest_calculations += 1
-        if count_of_latest_calculations > 10:
+        if count_of_latest_calculations > 10: # every 10 calculation we request new data 
             count_of_latest_calculations = 0
             rates = update_latest_rates()
         else:
