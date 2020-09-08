@@ -1,19 +1,20 @@
 import requests
+import os
 from tkinter import ttk
 import tkinter as tk
 
 ###----------------GETTING CURRENCY RATES DATA FROM THE FIXER API--------- https://fixer.io/
 url = 'http://data.fixer.io/api/'
-ACCESS_KEY = '*****************************************' # <---- PASTE HERE YOUR ACCESS KEY
+ACCESS_KEY = os.environ.get('FIXER_API_KEY') # <---- PASTE HERE YOUR ACCESS KEY
 count_of_latest_calculations = 0 # this variable is used to determine when to update the latest_rates value
 
-def request(url, TYPE='latest'):
+def make_request(url, TYPE='latest'):
     '''
     the TYPE variable defines if latest or historic rate date will be requested
     '''
     data = {}
     try:
-        data = requests.get(url+TYPE+ACCESS_KEY).json()
+        data = requests.get(url+TYPE+'?access_key='+ACCESS_KEY).json()
         print(data['date'])
         rates = data['rates']
     except KeyError:
@@ -22,14 +23,14 @@ def request(url, TYPE='latest'):
         calculated_amount_label.config(text='historical date from 1999-01-01')
     return rates
 
-latest_rates = request(url)
+latest_rates = make_request(url)
 
 def update_latest_rates():
     '''
     since we do not make request everytime for the latest rates and we store them in a value,
     they should be updated in order to get the latest
     '''
-    latest_rates = request(url)
+    latest_rates = make_request(url)
     return latest_rates
 
 def return_currency():
@@ -47,7 +48,7 @@ def return_currency():
             rates = latest_rates
     else:
         date = date_entry.get()
-        rates = request(url, date)
+        rates = make_request(url, date)
     try:
         amount = int(amount_entry.get())
         if from_currency != 'EUR':
