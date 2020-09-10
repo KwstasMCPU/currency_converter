@@ -14,7 +14,8 @@ def make_request(url, TYPE='latest'):
     '''
     data = {}
     try:
-        data = requests.get(url+TYPE+'?access_key='+ACCESS_KEY).json()
+        url_request = ''.join([url, TYPE, '?access_key=', ACCESS_KEY])
+        data = requests.get(url_request).json()
         print(data['date'])
         rates = data['rates']
     except KeyError:
