@@ -55,7 +55,7 @@ def return_currency():
         if from_currency != 'EUR':
             amount = amount / rates[from_currency.get()]
 
-        amount = round(amount * rates[to_currency.get()], 2) # rounding with 2 decimal numbers
+        amount = round(amount * rates[to_currency.get()], 4) # rounding with 2 decimal numbers
         calculated_amount_label.config(text=str(amount))
     except ValueError:
         calculated_amount_label.config(text='Pass a valid amount')
