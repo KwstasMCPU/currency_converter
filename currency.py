@@ -1,20 +1,24 @@
 import requests
 import os
+import time
 from tkinter import ttk
 import tkinter as tk
 
 ###----------------GETTING CURRENCY RATES DATA FROM THE FIXER API--------- https://fixer.io/
 url = 'http://data.fixer.io/api/'
-ACCESS_KEY = os.environ.get('FIXER_API_KEY') # <---- PASTE HERE YOUR ACCESS KEY
-count_of_latest_calculations = 0 # this variable is used to determine when to update the latest_rates value
+ACCESS_KEY = os.environ.get('FIXER_API_KEY') # <---- ASSISGN HERE YOUR ACCESS KEY ## note delete the os.environ.get() function too and just paste your key. ACCESS_KEY = your_key
 
 def make_request(url, TYPE='latest'):
+    global start_time
     '''
-    the TYPE variable defines if latest or historic rate date will be requested
+    Makes request to the fixer.io/api.
+    the TYPE variable defines if a latest or a historic currency rate will be requested
     '''
     data = {}
     try:
         url_request = ''.join([url, TYPE, '?access_key=', ACCESS_KEY])
+        # measuring time in order to make a requests every 10 secs (since i am using the free key, i have limited amount of requests)
+        start_time = time.time() 
         data = requests.get(url_request).json()
         print(data['date'])
         rates = data['rates']
@@ -24,25 +28,22 @@ def make_request(url, TYPE='latest'):
         calculated_amount_label.config(text='historical date from 1999-01-01')
     return rates
 
-latest_rates = make_request(url)
-
 def update_latest_rates():
-    '''
-    since we do not make request everytime for the latest rates and we store them in a value,
-    they should be updated in order to get the latest
-    '''
     latest_rates = make_request(url)
     return latest_rates
 
 def return_currency():
     '''
     calculates the amount of a currency to another currency
-    if the date entry is left blank it gives the latest currency, if not gives the historic one in the given date
+    if the date entry is left blank it gives the latest currency, 
+    if not gives the historic one in the given date
     '''
     if len(date_entry.get())==0:
-        global count_of_latest_calculations
-        count_of_latest_calculations += 1
-        if count_of_latest_calculations > 10: # every 10 calculation we request new data 
+        global start_time
+        end_time = time.time()
+        if end_time - start_time > 10: # check time elapsed since previous request
+            print(end_time - start_time)
+            start_time = end_time
             count_of_latest_calculations = 0
             rates = update_latest_rates()
         else:
@@ -55,12 +56,15 @@ def return_currency():
         if from_currency != 'EUR':
             amount = amount / rates[from_currency.get()]
 
-        amount = round(amount * rates[to_currency.get()], 4) # rounding with 2 decimal numbers
+        amount = abs(round(amount * rates[to_currency.get()], 4)) # rounding with 4 decimal numbers
         calculated_amount_label.config(text=str(amount))
     except ValueError:
         calculated_amount_label.config(text='Pass a valid amount')
     except KeyError:
         calculated_amount_label.config(text='Pass a valid currency')
+
+latest_rates = make_request(url)
+
 ####----list of available currencies-----------------------------------------------------####
 choices = ['AED', 'AFN', 'ALL', 'AMD', 'ANG', 'AOA', 'ARS', 'AUD', 'AWG', 'AZN', 'BAM', 
 'BBD', 'BDT', 'BGN', 'BHD', 'BIF', 'BMD', 'BND', 'BOB', 'BRL', 'BSD', 'BTC', 'BTN', 'BWP', 
